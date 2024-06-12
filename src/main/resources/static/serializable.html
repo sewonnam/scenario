@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>SERIALIZABLE</title>
+</head>
+<body>
+<p>실행 시나리오</p>
+<p>A 게시글의 조회수는 20입니다. 이때 2명의 사용자가 동시에 게시글을 조회하면 어떻게 될까요?</p>
+<input type="submit" value="실행">
+<br>
+<br>
+<div id="result"></div>
+</body>
+<script>
+    const input = document.querySelector('input')
+
+    input.onclick = async () => {
+        const requests = Array.from({length: 2}, () => {
+                fetch('http://localhost:8080/transactions/serializable', {
+                    method: 'POST'
+                })
+                    .then(data => data.json())
+                    .then(res => {
+                        document.getElementById("result").innerHTML = res.message.replace(/\n/g, '<br>');
+                    })
+            }
+        )
+
+        await Promise.all(requests)
+    }
+</script>
+</html>
